@@ -678,11 +678,11 @@ footer{border-top:1px solid var(--br2);padding:clamp(1.2rem,3vw,1.8rem) clamp(1r
         <h2 class="ct-h">Let's <em>connect</em><br/>&amp; grow together.</h2>
         <p class="ct-sub">Open to mentorship, collaborations, internships, or just a good tech conversation. Don't hesitate — reach out!</p>
         <div class="ct-links">
-            <a href="mailto:mrsonamsherpa61@gmail.com" class="ct-link">
+            <a href="/cdn-cgi/l/email-protection#3f524d4c50515e524c575a4d4f5e090e7f58525e5653115c5052" class="ct-link">
                 <span class="cli-ic">✉</span>
                 <span class="cli-text">
                     <span class="cli-top">Email</span>
-                    <span class="cli-val">sonam@gmail.com</span>
+                    <span class="cli-val"><span class="__cf_email__" data-cfemail="80f3efeee1edc0e7ede1e9ecaee3efed">[email&#160;protected]</span></span>
                 </span>
             </a>
           <a href="https://github.com/sososh3rpa" target="_blank" rel="noopener" class="ct-link"><div class="cli-ic" style="font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700">GH</div><div><div class="cli-top">GitHub</div><div class="cli-val">github.com/sonamsherpa</div></div></a>
@@ -694,7 +694,7 @@ footer{border-top:1px solid var(--br2);padding:clamp(1.2rem,3vw,1.8rem) clamp(1r
         <div class="gh-box">
           <div class="gh-head"><span style="font-size:1rem">🤝</span><div class="gh-title">Work With Me</div></div>
           <div class="gh-steps">
-            <div class="gh-step"><div class="gs-n">1</div><div class="gs-t">Send me a message at <code>sonam@example.com</code> introducing yourself and your idea.</div></div>
+            <div class="gh-step"><div class="gs-n">1</div><div class="gs-t">Send me a message at <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e4978b8a8589a4819c8589948881ca878b89">[email&#160;protected]</a></code> introducing yourself and your idea.</div></div>
             <div class="gh-step"><div class="gs-n">2</div><div class="gs-t">Connect on <code>GitHub</code> or <code>LinkedIn</code> to see my work and collaborate.</div></div>
             <div class="gh-step"><div class="gs-n">3</div><div class="gs-t">Let's schedule a quick call to discuss how we can learn and build together!</div></div>
             <div class="gh-step"><div class="gs-n">★</div><div class="gs-t">Always open to mentorship from experienced developers — I'm here to grow fast.</div></div>
@@ -749,7 +749,7 @@ footer{border-top:1px solid var(--br2);padding:clamp(1.2rem,3vw,1.8rem) clamp(1r
   <div class="cpow">✦ ARIA · Intelligent Portfolio Assistant</div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ══ PARTICLES ══ */
 (function(){
   const cv=document.getElementById('particles');
@@ -976,37 +976,173 @@ function localAnswer(q){
   return null;
 }
 
-const GENERAL=[
-  "That's a great question! While I'm primarily Sonam's portfolio assistant, I'll do my best to be helpful. Could you give me a bit more context, or would you like to know about Sonam's skills and projects instead? 😊",
-  "Interesting topic! I specialize in Sonam's work and tech concepts. Try asking me about **web development**, **programming**, **AI**, or **Sonam's projects** — I'll give you detailed, accurate answers! 💡",
-  "I'd love to dive deeper into that with you! For the best answers, try asking me about coding (HTML, CSS, JS, Python), computer science concepts, Sonam's background, or career tips for developers. 🚀"
-];
-let gIdx=0;
+/* ══════════════════════════════════════════
+   GEMINI API CONFIGURATION
+   ► PASTE YOUR GEMINI API KEY BELOW
+   ══════════════════════════════════════════ */
+    const GEMINI_KEY = 'AIzaSyAW0ot6XvESJm_V6_QC00RtiecL-In8Us0'; // ← Replace this with your real key
+
+const GEMINI_SYSTEM = `You are ARIA — Advanced Responsive Intelligent Assistant — embedded in Sonam Sherpa's personal portfolio website. You were built to be as intelligent and helpful as possible.
+
+== ABOUT SONAM SHERPA (portfolio owner) ==
+- Name: Sonam Sherpa
+- Degree: BCA (Bachelor of Computer Applications), 1st Year
+- Location: Sikkim, India 🏔
+- Skills: HTML5, CSS3, JavaScript, Python, C, Java, MySQL, Git, GitHub, VS Code, Canva, MS Office
+- Currently Learning: React.js, Node.js, SQL, Data Structures & Algorithms, Machine Learning
+- Interests: Web Development, Artificial Intelligence, Open Source
+- Achievement: Highest score in Information Technology across the state in Class XII board exams
+- Projects: Portfolio website with AI assistant, Calculator App (HTML/CSS/JS), To-Do List App (localStorage), Python Mini Games
+
+== STRICT PRIVACY RULES ==
+You must NEVER discuss, reveal, or even acknowledge questions about:
+family, parents, mother, father, siblings, personal relationships, romantic life, phone number, home address, salary, income, religion, caste, age, birthday, weight, height, daily routine, or any other private personal information.
+If asked, politely decline and redirect to tech topics or Sonam's work.
+
+== YOUR BEHAVIOR ==
+- Answer ANY question intelligently — coding, science, math, history, general knowledge, career advice, technology, etc.
+- Be friendly, concise, and genuinely helpful like a top AI assistant
+- Format code in markdown code blocks when relevant
+- For questions about Sonam, use the information above
+- Always stay positive and encouraging`;
+
+/* remembered working model to skip re-discovery */
+let _workingModel = null;
+
+async function discoverModel() {
+  if (_workingModel) return _workingModel;
+  const prefer = [
+    'gemini-2.0-flash','gemini-2.0-flash-lite','gemini-2.0-flash-exp',
+    'gemini-1.5-flash-latest','gemini-1.5-flash','gemini-1.5-flash-8b'
+  ];
+  try {
+    const r = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models?key=' + GEMINI_KEY
+    );
+    if (r.ok) {
+      const d = await r.json();
+      const avail = (d.models || [])
+        .filter(m => (m.supportedGenerationMethods||[]).includes('generateContent'))
+        .map(m => m.name.replace('models/',''));
+      for (const p of prefer) { if (avail.includes(p)) { _workingModel = p; return p; } }
+      if (avail.length) { _workingModel = avail[0]; return avail[0]; }
+    }
+  } catch (_) {}
+  _workingModel = prefer[0];
+  return prefer[0];
+}
+
+async function callGemini(userMessage) {
+  if (!GEMINI_KEY || GEMINI_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
+    return "Please add your Gemini API key to the GEMINI_KEY variable in the HTML file. Get a free key at aistudio.google.com";
+  }
+
+  let historyText = '';
+  for (const m of hist.slice(-8)) {
+    historyText += (m.role === 'user' ? 'User: ' : 'ARIA: ') + m.content + '\n';
+  }
+  const fullPrompt = GEMINI_SYSTEM + '\n\n== RECENT CONVERSATION ==\n' + historyText + '\n== RESPOND TO ==\nUser: ' + userMessage + '\n\nARIA:';
+
+  const first = await discoverModel();
+  const tryList = [first,'gemini-2.0-flash','gemini-2.0-flash-lite','gemini-1.5-flash-latest','gemini-1.5-flash'];
+  const tried = new Set();
+
+  for (const model of tryList) {
+    if (tried.has(model)) continue;
+    tried.add(model);
+    let res, data;
+    try {
+      res = await fetch(
+        'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + GEMINI_KEY,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
+            generationConfig: { temperature: 0.80, maxOutputTokens: 1024 }
+          })
+        }
+      );
+      data = await res.json().catch(() => ({}));
+    } catch (netErr) {
+      if ([...tried].length >= tryList.length) {
+        return "Network error — please make sure you have internet and the site is hosted online (not file://). Try netlify.com/drop for instant free hosting!";
+      }
+      continue;
+    }
+
+    if (!res.ok) {
+      const code = res.status;
+      const msg = (data && data.error && data.error.message) || ('HTTP ' + code);
+      if (code === 400 && msg.toLowerCase().includes('api key'))
+        return "Your API key is invalid. Please copy it again carefully from aistudio.google.com and paste it into GEMINI_KEY.";
+      if (code === 403)
+        return "Your API key was denied (403). Go to aistudio.google.com, delete your old key and create a brand new one.";
+      if (code === 429)
+        return "Too many messages — you've hit Google's free limit. Wait 1 minute then try again.";
+      if (code === 404) { _workingModel = null; continue; }
+      continue;
+    }
+
+    const text = data && data.candidates && data.candidates[0] &&
+                 data.candidates[0].content && data.candidates[0].content.parts &&
+                 data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+    if (text && text.trim()) { _workingModel = model; return text.trim(); }
+
+    const fin = data && data.candidates && data.candidates[0] && data.candidates[0].finishReason;
+    if (fin === 'SAFETY') return "I can not respond to that. Try asking something else!";
+  }
+  return "Could not get a response. Please make sure your API key is active at aistudio.google.com and try again.";
+}
 
 async function send(){
-  const text=cin.value.trim();if(!text)return;
-  cin.value='';addMsg(text,'user');hist.push({role:'user',content:text});
+  const text = cin.value.trim();
+  if (!text) return;
+  cin.value = '';
+  addMsg(text, 'user');
+  hist.push({ role: 'user', content: text });
   showTyping();
-  const delay=Math.random()*600+400;
-  await new Promise(r=>setTimeout(r,delay));
-  hideTyping();
-  const local=localAnswer(text);
-  if(local){
-    addMsg(local,'bot');
-    hist.push({role:'assistant',content:local});
-  } else {
-    const reply=GENERAL[gIdx%GENERAL.length];
-    addMsg(reply,'bot');
-    hist.push({role:'assistant',content:reply});
-    gIdx++;
+
+  // Check privacy first — never send to Gemini
+  if (isPrivate(text)) {
+    await new Promise(r => setTimeout(r, 500));
+    hideTyping();
+    const privReply = "That's personal information I keep private. 😊 I'd love to tell you about Sonam's skills, projects, or journey — or help you with any tech question!";
+    addMsg(privReply, 'bot');
+    hist.push({ role: 'assistant', content: privReply });
+    return;
+  }
+
+  // Try local knowledge base first (instant)
+  const local = localAnswer(text);
+  if (local) {
+    await new Promise(r => setTimeout(r, Math.random() * 400 + 300));
+    hideTyping();
+    addMsg(local, 'bot');
+    hist.push({ role: 'assistant', content: local });
+    return;
+  }
+
+  // Fall through to Gemini for all other questions
+  try {
+    const reply = await callGemini(text);
+    hideTyping();
+    addMsg(reply, 'bot');
+    hist.push({ role: 'assistant', content: reply });
+  } catch (e) {
+    hideTyping();
+    addMsg("Something went wrong. Please try again! 😊", 'bot');
   }
 }
 
-cin.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
-csend.addEventListener('click',send);
+cin.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
+csend.addEventListener('click', send);
 
-/* ══ KEYBOARD ESC to close chat ══ */
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&chatOpen)toggleChat(false);});
+/* Initial greeting */
+setTimeout(() => {
+  addMsg("Hey there! 👋 I'm **ARIA**, Sonam's AI assistant — powered by Gemini.\n\nI can answer questions about Sonam's skills & projects, help with coding, explain tech concepts, or chat about literally anything! What's on your mind? ✨", 'bot');
+}, 600);
+
 </script>
 </body>
 </html>
