@@ -1151,15 +1151,15 @@ function localAnswer(q){
   const ql=q.toLowerCase();
   if(isPrivate(ql))return "That's personal information I keep private. 😊 I'd love to tell you about Sonam's skills, projects, or journey — or help you with any tech question!";
   if(/who (is|are)|about sonam|introduce|tell me about|sonam sherpa/.test(ql))
-    return `**Sonam Sherpa** is a BCA 1st-year student from **Sikkim, India 🏔** with a deep passion for technology and web development.\n\nShe achieved the **highest score in Information Technology** across the state in her Class XII board exams — a remarkable achievement that confirmed her path in tech.\n\nCurrently mastering: ${KB.profile.skills}.\n\nShe's building exciting projects and growing every single day! 🚀`;
+    return `**Sonam Sherpa** is a BCA 1st-year student from **Sikkim, India 🏔** with a deep passion for technology and web development.\n\nhe achieved the **highest score in Information Technology** across the state in his Class XII board exams — a remarkable achievement that confirmed his path in tech.\n\nCurrently mastering: ${KB.profile.skills}.\n\nhe's building exciting projects and growing every single day! 🚀`;
   if(/project|built|build|portfolio|calculator|todo|to-do|python game/.test(ql))
-    return `Here are Sonam's projects so far:\n\n${KB.profile.projects.map((p,i)=>`**${i+1}.** ${p}`).join('\n')}\n\nMore are in the making — she learns by building! 🔨`;
+    return `Here are Sonam's projects so far:\n\n${KB.profile.projects.map((p,i)=>`**${i+1}.** ${p}`).join('\n')}\n\nMore are in the making — he learns by building! 🔨`;
   if(/skill|know|technology|language|tool|tech stack|what can/.test(ql))
-    return `**Sonam's current tech stack:**\n\n${KB.profile.skills}\n\n**Next up on her roadmap:** ${KB.profile.learning}\n\nShe's actively learning and improving every day! ⚡`;
+    return `**Sonam's current tech stack:**\n\n${KB.profile.skills}\n\n**Next up on his roadmap:** ${KB.profile.learning}\n\nhe's actively learning and improving every day! ⚡`;
   if(/journey|background|education|history|study|story|timeline|school|class xii|board/.test(ql))
-    return `**Sonam's Journey:**\n\n🎓 **2025–Present** — BCA 1st Year, diving deep into CS fundamentals\n\n★ **2025** — Achieved the **highest IT score in the state** at Class XII boards — a defining moment\n\n💡 **2023–2025** — Class XI & XII, discovered a love for programming and computers\n\n🌱 **The Beginning** — Grew up in Sikkim, fascinated by technology from day one\n\nEvery step has been intentional — she's on her way to becoming a full-stack developer! 🚀`;
+    return `**Sonam's Journey:**\n\n🎓 **2025–Present** — BCA 1st Year, diving deep into CS fundamentals\n\n★ **2025** — Achieved the **highest IT score in the state** at Class XII boards — a defining moment\n\n💡 **2023–2025** — Class XI & XII, discovered a love for programming and computers\n\n🌱 **The Beginning** — Grew up in Sikkim, fascinated by technology from day one\n\nEvery step has been intentional — he's on his way to becoming a full-stack developer! 🚀`;
   if(/contact|email|reach|github|linkedin|instagram|connect/.test(ql))
-    return `You can reach Sonam through:\n\n✉ **Email:** sonam@example.com\n\n🐙 **GitHub:** github.com/sonamsherpa\n\n💼 **LinkedIn:** linkedin.com/in/sonamsherpa\n\n📸 **Instagram:** @sonamsherpa\n\nShe's open to mentorship, collaborations, and good tech conversations! 😊`;
+    return `You can reach Sonam through:\n\n✉ **Email:** sonam@example.com\n\n🐙 **GitHub:** github.com/sonamsherpa\n\n💼 **LinkedIn:** linkedin.com/in/sonamsherpa\n\n📸 **Instagram:** @sonamsherpa\n\nhe's open to mentorship, collaborations, and good tech conversations! 😊`;
   if(/who are you|what are you|your name|aria|ai assistant|about you/.test(ql))
     return `I'm **ARIA** — Advanced Responsive Intelligent Assistant — built into Sonam's portfolio. 🤖\n\nI can answer questions about Sonam's work and background, help with coding and tech concepts, explain computer science topics, and engage in thoughtful tech conversations.\n\nWhat would you like to explore?`;
   if(/what is ai|artificial intelligence|machine learning|deep learning|neural/.test(ql))
