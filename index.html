@@ -1130,6 +1130,8 @@ function addMsg(text,role){
 function showTyping(){const d=document.createElement('div');d.className='typing';d.id='typ';d.innerHTML='<div class="td"></div><div class="td"></div><div class="td"></div>';cmsgs.appendChild(d);cmsgs.scrollTop=cmsgs.scrollHeight;}
 function hideTyping(){const t=document.getElementById('typ');if(t)t.remove();}
 
+
+
 /* ——— ARIA Knowledge Engine ——— */
 const KB={
   profile:{
@@ -1147,37 +1149,80 @@ const KB={
 
 function isPrivate(q){return KB.private.some(w=>q.toLowerCase().includes(w));}
 
+/* ── helpers ── */
+const aboutSonam = q => /sonam|portfolio owner|this portfolio|site owner/.test(q);
+const aboutARIA  = q => /\baria\b|who are you|what are you|your name|about you|are you (an? )?ai|are you (a )?bot/.test(q);
+
 function localAnswer(q){
-  const ql=q.toLowerCase();
-  if(isPrivate(ql))return "That's personal information I keep private. 😊 I'd love to tell you about Sonam's skills, projects, or journey — or help you with any tech question!";
-  if(/who (is|are)|about sonam|introduce|tell me about|sonam sherpa/.test(ql))
-    return `**Sonam Sherpa** is a BCA 1st-year student from **Sikkim, India 🏔** with a deep passion for technology and web development.\n\nhe achieved the **highest score in Information Technology** across the state in his Class XII board exams — a remarkable achievement that confirmed his path in tech.\n\nCurrently mastering: ${KB.profile.skills}.\n\nhe's building exciting projects and growing every single day! 🚀`;
-  if(/project|built|build|portfolio|calculator|todo|to-do|python game/.test(ql))
-    return `Here are Sonam's projects so far:\n\n${KB.profile.projects.map((p,i)=>`**${i+1}.** ${p}`).join('\n')}\n\nMore are in the making — he learns by building! 🔨`;
-  if(/skill|know|technology|language|tool|tech stack|what can/.test(ql))
-    return `**Sonam's current tech stack:**\n\n${KB.profile.skills}\n\n**Next up on his roadmap:** ${KB.profile.learning}\n\nhe's actively learning and improving every day! ⚡`;
-  if(/journey|background|education|history|study|story|timeline|school|class xii|board/.test(ql))
-    return `**Sonam's Journey:**\n\n🎓 **2025–Present** — BCA 1st Year, diving deep into CS fundamentals\n\n★ **2025** — Achieved the **highest IT score in the state** at Class XII boards — a defining moment\n\n💡 **2023–2025** — Class XI & XII, discovered a love for programming and computers\n\n🌱 **The Beginning** — Grew up in Sikkim, fascinated by technology from day one\n\nEvery step has been intentional — he's on his way to becoming a full-stack developer! 🚀`;
-  if(/contact|email|reach|github|linkedin|instagram|connect/.test(ql))
-    return `You can reach Sonam through:\n\n✉ **Email:** sonam@example.com\n\n🐙 **GitHub:** github.com/sonamsherpa\n\n💼 **LinkedIn:** linkedin.com/in/sonamsherpa\n\n📸 **Instagram:** @sonamsherpa\n\nhe's open to mentorship, collaborations, and good tech conversations! 😊`;
-  if(/who are you|what are you|your name|aria|ai assistant|about you/.test(ql))
-    return `I'm **ARIA** — Advanced Responsive Intelligent Assistant — built into Sonam's portfolio. 🤖\n\nI can answer questions about Sonam's work and background, help with coding and tech concepts, explain computer science topics, and engage in thoughtful tech conversations.\n\nWhat would you like to explore?`;
-  if(/what is ai|artificial intelligence|machine learning|deep learning|neural/.test(ql))
-    return `**Artificial Intelligence (AI)** is the simulation of human intelligence in machines — enabling them to learn, reason, and solve problems.\n\n**Key branches:**\n- **Machine Learning** — systems that learn from data\n- **Deep Learning** — neural networks with multiple layers\n- **NLP** — understanding human language\n- **Computer Vision** — interpreting images/video\n\nAI is everywhere: your phone's face unlock, Netflix recommendations, Google search, and yes — assistants like me! 😊\n\nSonam is interested in AI and plans to explore ML in her roadmap! 🚀`;
-  if(/html|css|flexbox|grid|responsive|web dev/.test(ql))
-    return `Great web dev question! Here's a quick primer:\n\n**HTML** — structure of web pages (elements, tags)\n**CSS** — styling (colors, layouts, animations)\n\nKey CSS layout tools:\n\`\`\`css\n/* Flexbox */\n.container { display: flex; gap: 1rem; }\n\n/* Grid */\n.grid { display: grid; grid-template-columns: repeat(3, 1fr); }\n\`\`\`\n\nSonam is actively building with HTML & CSS — it's the foundation of everything on the web! 💻`;
-  if(/python|script|code python/.test(ql))
-    return `**Python** is one of the best languages to start with — clean syntax, powerful libraries!\n\n\`\`\`python\n# Hello World\nprint("Hello, World!")\n\n# A simple function\ndef greet(name):\n    return f"Hello, {name}!"\n\nprint(greet("Sonam"))  # Hello, Sonam!\n\`\`\`\n\nSonam is learning Python fundamentals and has already built mini games with it! 🐍`;
-  if(/javascript|js|dom|event/.test(ql))
-    return `**JavaScript** brings web pages to life!\n\n\`\`\`javascript\n// DOM manipulation\nconst btn = document.getElementById('myBtn');\nbtn.addEventListener('click', () => {\n  console.log('Button clicked!');\n});\n\n// Fetch API example\nfetch('https://api.example.com/data')\n  .then(res => res.json())\n  .then(data => console.log(data));\n\`\`\`\n\nSonam built this entire portfolio in JavaScript — including me, ARIA! ✨`;
-  if(/git|github|version control|commit|push/.test(ql))
-    return `**Git** is essential for every developer!\n\n\`\`\`bash\ngit init            # Start a repo\ngit add .           # Stage changes\ngit commit -m "msg" # Commit\ngit push origin main # Push to GitHub\n\`\`\`\n\nGitHub is where you host your code and collaborate with others. Sonam uses both daily! 🐙`;
-  if(/career|advice|how to start|become developer|learn coding|study|tips/.test(ql))
-    return `Great question! Here's honest advice for aspiring developers:\n\n**1.** Master the fundamentals — HTML, CSS, JS, one backend language\n**2.** Build projects — even small ones teach you more than tutorials\n**3.** Use Git & GitHub from day one\n**4.** Read documentation, not just YouTube tutorials\n**5.** Join communities — Discord, GitHub, local meetups\n**6.** Be consistent — 30 min daily > 5 hours on weekends\n\nSonam is following exactly this path! 💪 The key is to **start and never stop**.`;
-  if(/^(hi|hello|hey|hiya|howdy|sup|what'?s up)/i.test(ql))
+  const ql = q.toLowerCase().trim();
+
+  /* ── greetings ── */
+  if(/^(hi|hello|hey|hiya|howdy|sup|what'?s up)[\s!?.]*$/.test(ql))
     return `Hey there! 👋 Great to have you here!\n\nI'm **ARIA**, Sonam's AI assistant. I can:\n- Tell you all about Sonam's skills & projects\n- Help with coding questions (HTML, CSS, JS, Python…)\n- Explain CS and AI concepts\n- Give career advice for aspiring devs\n\nWhat's on your mind?`;
-  if(/thank|thanks|great|awesome|perfect|amazing|cool/.test(ql))
-    return `You're very welcome! 😊 That's what I'm here for.\n\nFeel free to ask anything else — about Sonam, coding, tech, or really anything at all. Happy to help! ✨`;
+
+  /* ── thanks / praise ── */
+  if(/^(thank(s| you)|thx|ty|great|awesome|perfect|amazing|cool|nice)[!. ]*$/.test(ql))
+    return `You're very welcome! 😊 That's what I'm here for.\n\nFeel free to ask anything else — about Sonam, coding, tech, or anything at all. Happy to help! ✨`;
+
+  /* ── about ARIA itself ── */
+  if(aboutARIA(ql))
+    return `I'm **ARIA** — Advanced Responsive Intelligent Assistant — built into Sonam's portfolio. 🤖\n\nI can answer questions about Sonam's work and background, help with coding and tech concepts, explain computer science topics, and engage in thoughtful tech conversations.\n\nWhat would you like to explore?`;
+
+  /* ════════════════════════════════════════════
+     PORTFOLIO QUESTIONS — only fire when the
+     question is clearly asking about Sonam/this
+     portfolio, NOT about random people or topics
+     ════════════════════════════════════════════ */
+
+  /* who is Sonam / about Sonam */
+  if(aboutSonam(ql) && /who is|about|introduce|tell me|describe/.test(ql))
+    return `**Sonam Sherpa** is a BCA 1st-year student from **Sikkim, India 🏔** with a deep passion for technology and web development.\n\nhe achieved the **highest score in Information Technology** across the state in his Class XII board exams — a remarkable achievement that confirmed his path in tech.\n\nCurrently mastering: ${KB.profile.skills}.\n\nhe's building exciting projects and growing every single day! 🚀`;
+
+  /* Sonam's projects */
+  if((aboutSonam(ql) || /your projects|his projects|these projects/.test(ql)) && /project|built|build|calculator|todo|to-do|python game/.test(ql))
+    return `Here are Sonam's projects so far:\n\n${KB.profile.projects.map((p,i)=>`**${i+1}.** ${p}`).join('\n')}\n\nMore are in the making — he learns by building! 🔨`;
+
+  /* Sonam's skills */
+  if((aboutSonam(ql) || /your skills|his skills|your tech|his tech|your stack|his stack/.test(ql)) && /skill|technolog|language|tool|tech stack|what can (she|you)/.test(ql))
+    return `**Sonam's current tech stack:**\n\n${KB.profile.skills}\n\n**Next up on his roadmap:** ${KB.profile.learning}\n\nhe's actively learning and improving every day! ⚡`;
+
+  /* Sonam's journey */
+  if((aboutSonam(ql) || /your journey|his journey|your background|his background|your education|his education/.test(ql)) && /journey|background|education|history|story|timeline|school|class xii|board exam/.test(ql))
+    return `**Sonam's Journey:**\n\n🎓 **2025–Present** — BCA 1st Year, diving deep into CS fundamentals\n\n★ **2025** — Achieved the **highest IT score in the state** at Class XII boards — a defining moment\n\n💡 **2023–2025** — Class XI & XII, discovered a love for programming and computers\n\n🌱 **The Beginning** — Grew up in Sikkim, fascinated by technology from day one\n\nEvery step has been intentional — she's on her way to becoming a full-stack developer! 🚀`;
+
+  /* Contact Sonam */
+  if((aboutSonam(ql) || /contact you|reach you|your email|his email|your github|his github|your linkedin/.test(ql)) && /contact|email|reach|github|linkedin|instagram|connect/.test(ql))
+    return `You can reach Sonam through:\n\n✉ **Email:** sonam@example.com\n\n🐙 **GitHub:** github.com/sonamsherpa\n\n💼 **LinkedIn:** linkedin.com/in/sonamsherpa\n\n📸 **Instagram:** @sonamsherpa\n\nhe's open to mentorship, collaborations, and good tech conversations! 😊`;
+
+  /* ════════════════════════════════════════════
+     GENERAL TECH Q&A — safe to answer for anyone
+     ════════════════════════════════════════════ */
+
+  /* AI / ML */
+  if(/\bwhat is (ai|artificial intelligence|machine learning|deep learning)\b|\bneural network\b|\bhow does (ai|ml) work\b/.test(ql))
+    return `**Artificial Intelligence (AI)** is the simulation of human intelligence in machines — enabling them to learn, reason, and solve problems.\n\n**Key branches:**\n- **Machine Learning** — systems that learn from data\n- **Deep Learning** — neural networks with multiple layers\n- **NLP** — understanding human language\n- **Computer Vision** — interpreting images/video\n\nAI is everywhere: your phone's face unlock, Netflix recommendations, Google search, and yes — assistants like me! 😊`;
+
+  /* HTML / CSS */
+  if(/\b(what is html|what is css|how does (html|css) work|explain (html|css)|flexbox|css grid|responsive design|web dev(elopment)?)\b/.test(ql))
+    return `Great web dev question! Here's a quick primer:\n\n**HTML** — structure of web pages (elements, tags)\n**CSS** — styling (colors, layouts, animations)\n\nKey CSS layout tools:\n\`\`\`css\n/* Flexbox */\n.container { display: flex; gap: 1rem; }\n\n/* Grid */\n.grid { display: grid; grid-template-columns: repeat(3, 1fr); }\n\`\`\`\n\nThe foundation of everything on the web! 💻`;
+
+  /* Python */
+  if(/\b(what is python|how (to|do i) (use|learn|code in|write) python|python (tutorial|basics|syntax|example))\b/.test(ql))
+    return `**Python** is one of the best languages to start with — clean syntax, powerful libraries!\n\n\`\`\`python\n# Hello World\nprint("Hello, World!")\n\n# A simple function\ndef greet(name):\n    return f"Hello, {name}!"\n\nprint(greet("Sonam"))  # Hello, Sonam!\n\`\`\`\n\nGreat for web, data science, AI, and automation! 🐍`;
+
+  /* JavaScript */
+  if(/\b(what is javascript|how (to|do i) (use|learn|write) (javascript|js)|javascript (tutorial|basics|syntax|example)|dom manipulation|fetch api)\b/.test(ql))
+    return `**JavaScript** brings web pages to life!\n\n\`\`\`javascript\n// DOM manipulation\nconst btn = document.getElementById('myBtn');\nbtn.addEventListener('click', () => {\n  console.log('Button clicked!');\n});\n\n// Fetch API example\nfetch('https://api.example.com/data')\n  .then(res => res.json())\n  .then(data => console.log(data));\n\`\`\`\n\nThe language of the web — runs in every browser! ✨`;
+
+  /* Git / GitHub */
+  if(/\b(what is git|how (to|do i) use git|git (tutorial|basics|commands)|version control|git (commit|push|pull|clone|init))\b/.test(ql))
+    return `**Git** is essential for every developer!\n\n\`\`\`bash\ngit init            # Start a repo\ngit add .           # Stage changes\ngit commit -m "msg" # Commit\ngit push origin main # Push to GitHub\n\`\`\`\n\nGitHub is where you host your code and collaborate with others. 🐙`;
+
+  /* Career advice */
+  if(/\b(how (do i|to) become (a )?developer|how (do i|to) (start|learn) (coding|programming)|career (advice|tips)|tips for (beginners?|developers?))\b/.test(ql))
+    return `Here's honest advice for aspiring developers:\n\n**1.** Master the fundamentals — HTML, CSS, JS, one backend language\n**2.** Build projects — even small ones teach you more than tutorials\n**3.** Use Git & GitHub from day one\n**4.** Read documentation, not just YouTube tutorials\n**5.** Join communities — Discord, GitHub, local meetups\n**6.** Be consistent — 30 min daily > 5 hours on weekends\n\nThe key is to **start and never stop**. 💪`;
+
+  /* ── nothing matched → send to Groq backend ── */
   return null;
 }
 
@@ -1202,16 +1247,16 @@ async function callBackend(userMessage) {
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
-      if (response.status === 429) return "I'm getting a lot of messages right now! Please wait a moment and try again. 😊";
-      if (response.status === 401 || response.status === 502) return "There's a configuration issue on the server. Please check your Render environment variables.";
-      return err.error || "Something went wrong. Please try again!";
+      if (response.status === 429) return "⏳ I'm receiving a lot of messages right now — please wait a moment and try again!";
+      if (response.status === 401 || response.status === 502) return "⚙️ There's a server configuration issue. Please check the Render environment variables.";
+      return err.error || "Something went wrong on my end. Please try again in a moment!";
     }
 
     const data = await response.json();
     return data.reply || "I couldn't generate a response. Please try again!";
   } catch (err) {
     console.error('Backend error:', err);
-    return "I can't connect to the server right now. Please make sure the backend is running on Render. 🔧";
+    return "🔌 I can't reach the AI server right now — it may be starting up (Render free tier sleeps after inactivity).\n\nPlease **wait 30 seconds** and try again, or ask me about Sonam's portfolio, skills, or projects — I can answer those instantly! 😊";
   }
 }
  
