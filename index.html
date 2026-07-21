@@ -249,8 +249,8 @@ section{position:relative;z-index:2}
 .pj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(.75rem,2vw,1.1rem)}
 @media(max-width:580px){.pj-grid{grid-template-columns:1fr}}
 .pj-card{background:var(--card);border:1px solid var(--br2);border-radius:14px;padding:clamp(1.3rem,3vw,1.9rem);position:relative;overflow:hidden;transition:all .35s;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.pj-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(99,102,241,.07),transparent 60%);opacity:0;transition:opacity .35s;border-radius:14px}
-.pj-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--v2),transparent);opacity:0;transition:opacity .35s}
+.pj-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(99,102,241,.07),transparent 60%);opacity:0;transition:opacity .35s;border-radius:14px;pointer-events:none}
+.pj-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--v2),transparent);opacity:0;transition:opacity .35s;pointer-events:none}
 @media(hover:hover){.pj-card:hover{transform:translateY(-6px);border-color:var(--br3);box-shadow:0 28px 64px rgba(0,0,0,.5),var(--glow)}.pj-card:hover::before,.pj-card:hover::after{opacity:1}.pj-card:hover .pj-name{color:var(--v3)}}
 .pj-card:active{transform:scale(.98)}
 .pj-status{display:inline-flex;align-items:center;gap:.35rem;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.9rem}
